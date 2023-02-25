@@ -1,14 +1,59 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 // Define a home function which writes a byte slice containing
 // "Hello from Snippetbox" as the response body.
 func home(w http.ResponseWriter, r *http.Request) {
+	// Check if the current request URL path exactly matches "/". If it doesn't, use
+	// the http.NotFound() function to send a 404 response to the client.
+	// Note that we don't need to write a header here because http.NotFound()
+	// does that for us.
+	if r.URL.Path != "/" {
+		http.NotFound(w, r)
+		return
+	}
+
 	w.Write([]byte("Hello from Snippetbox"))
+}
+
+// Add a snippetView handler function
+func snippetView(w http.ResponseWriter, r *http.Request) {
+	// Use r.URL.Query().Get() to get the value of the id parameter from the query
+	// string. If the id parameter is empty, we return a 404 page not found
+	// response. If the id parameter is invalid (for example, if it's less than 1),
+	// we also return a 404 page not found response.
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil || id < 1 {
+		http.NotFound(w, r)
+		return
+	}
+
+	// Use the fmt.Fprintf() function to interpolate the id value with our response
+	// and write it to the http.ResponseWriter.
+	fmt.Fprintf(w, "Display a specific snippet with ID %d...", id)
+}
+
+// Add a snippetCreate handler function
+func snippetCreate(w http.ResponseWriter, r *http.Request) {
+	// Use r.Method to check whether the request is using POST or not
+	if r.Method != http.MethodPost {
+		// If it's not, use the w.WriteHeader() method to send a 405 status code and
+		// the w.Write() method to write a "Method Not Allowed" response body. We then
+		// return from the function so that the subsequent code is not executed.
+		w.Header().Set("Allow", http.MethodPost)
+		// w.WriteHeader(405)
+		// w.Write([]byte("Method Not Allowed"))
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	w.Write([]byte("Create a new snippet..."))
 }
 
 func main() {
@@ -16,6 +61,8 @@ func main() {
 	// register the home function as the handler for the "/" URL pattern.
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", home)
+	mux.HandleFunc("/snippet", snippetView)
+	mux.HandleFunc("/snippet/create", snippetCreate)
 
 	// Use the http.ListenAndServe() function to start a new web server. We pass in
 	// two parameters: the TCP network address to listen on (in this case ":4000")
