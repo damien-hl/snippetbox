@@ -9,6 +9,18 @@
 docker run -d --name snippetbox-mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password mysql
 ```
 
+## Connect to the MySQL container
+
+```
+docker exec -it snippetbox-mysql bash
+```
+
+## Connect to the MySQL server
+
+```
+mysql -u root -p
+```
+
 ## Create the database
 ```
 CREATE DATABASE snippetbox CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
