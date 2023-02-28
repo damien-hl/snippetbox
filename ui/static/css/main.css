@@ -189,6 +189,11 @@ form label {
     margin-bottom: 9px;
 }
 
+form fieldset {
+    padding-top: 9px;
+    border: none;
+}
+
 .error {
     color: #C0392B;
     font-weight: bold;
