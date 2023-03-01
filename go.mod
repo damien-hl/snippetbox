@@ -12,4 +12,5 @@ require (
 require (
 	github.com/alexedwards/scs/mysqlstore v0.0.0-20230217120314-6b1bedc0f08c // indirect
 	github.com/alexedwards/scs/v2 v2.5.0 // indirect
+	golang.org/x/crypto v0.6.0 // indirect
 )
