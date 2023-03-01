@@ -3,25 +3,28 @@
 > Paste and share snippets of text
 
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/made-with-go.svg)](https://forthebadge.com)
-## Create a Docker container for MySQL
+
+## Setup
+
+### 1. Create a Docker container for MySQL
 
 ```
 docker run -d --name snippetbox-mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password mysql
 ```
 
-## Connect to the MySQL container
+### 2. Connect to the MySQL container
 
 ```
 docker exec -it snippetbox-mysql bash
 ```
 
-## Connect to the MySQL server
+### 3. Connect to the MySQL server
 
 ```
 mysql -u root -p
 ```
 
-## Create the database
+### 4. Create the database
 ```
 CREATE DATABASE snippetbox CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -46,7 +49,7 @@ CREATE TABLE sessions (
 CREATE INDEX sessions_expiry_idx ON sessions (expiry);
 ```
 
-## Seed the database
+### 5. Seed the database
 ```
 INSERT INTO snippets (title, content, created, expires) VALUES (
     'An old silent pond',
@@ -70,7 +73,7 @@ INSERT INTO snippets (title, content, created, expires) VALUES (
 );
 ```
 
-## Create a new user
+### 6. Create a new user
 
 Replace localhost with the IP address of the Docker container (172.17.0.1 in my case)
 
@@ -84,7 +87,7 @@ ALTER USER 'web'@'172.17.0.1' IDENTIFIED BY 'password';
 FLUSH PRIVILEGES;
 ```
 
-## Generate a self-signed certificate
+### 7. Generate a self-signed certificate
 
 ```
 go run /usr/local/go/src/crypto/tls/generate_cert.go --rsa-bits=2048 --host=localhost
