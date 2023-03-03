@@ -7,25 +7,22 @@
 ## Setup
 
 ### 1. Create a Docker container for MySQL
-
-```
+```bash
 docker run -d --name snippetbox-mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password mysql
 ```
 
 ### 2. Connect to the MySQL container
-
-```
+```bash
 docker exec -it snippetbox-mysql bash
 ```
 
 ### 3. Connect to the MySQL server
-
-```
+```bash
 mysql -u root -p
 ```
 
 ### 4. Create the database
-```
+```sql
 CREATE DATABASE snippetbox CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 USE snippetbox;
@@ -60,7 +57,7 @@ ALTER TABLE users ADD CONSTRAINT users_uc_email UNIQUE (email);
 ```
 
 ### 5. Seed the database
-```
+```sql
 INSERT INTO snippets (title, content, created, expires) VALUES (
     'An old silent pond',
     'An old silent pond...\nA frog jumps into the pond,\nsplash! Silence again.\n\n– Matsuo Bashō',
@@ -84,10 +81,9 @@ INSERT INTO snippets (title, content, created, expires) VALUES (
 ```
 
 ### 6. Create a new user
-
 Replace localhost with the IP address of the Docker container (172.17.0.1 in my case)
 
-```
+```sql
 CREATE USER 'web'@'172.17.0.1';
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON snippetbox.* TO 'web'@'172.17.0.1';
@@ -99,6 +95,18 @@ FLUSH PRIVILEGES;
 
 ### 7. Generate a self-signed certificate
 
-```
+```bash
 go run /usr/local/go/src/crypto/tls/generate_cert.go --rsa-bits=2048 --host=localhost
+```
+
+## Run tests
+
+### 1. Run all tests
+```bash
+go test -v ./...
+```
+
+### 2. Run a specific test
+```bash
+go test -v -run="^TestUserSignup$" ./cmd/web/
 ```
