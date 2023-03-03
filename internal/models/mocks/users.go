@@ -1,8 +1,27 @@
 package mocks
 
-import "github.com/damien-hl/snippetbox/internal/models"
+import (
+	"time"
+
+	"github.com/damien-hl/snippetbox/internal/models"
+)
 
 type UserModel struct{}
+
+func (m *UserModel) Get(ID int) (*models.User, error) {
+	if ID == 1 {
+		u := &models.User{
+			ID:        1,
+			Name:      "Alice",
+			Email:     "alice@example.com",
+			CreatedAt: time.Now(),
+		}
+
+		return u, nil
+	}
+
+	return nil, models.ErrNoRecord
+}
 
 func (m *UserModel) Insert(name, email, password string) error {
 	switch email {
