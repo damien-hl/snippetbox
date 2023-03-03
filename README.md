@@ -101,12 +101,23 @@ go run /usr/local/go/src/crypto/tls/generate_cert.go --rsa-bits=2048 --host=loca
 
 ## Run tests
 
-### 1. Run all tests
+### 1. Create the test database
+```sql
+CREATE DATABASE test_snippetbox CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE USER 'test_web'@'172.17.0.1';
+
+GRANT CREATE, DROP, ALTER, INDEX, SELECT, INSERT, UPDATE, DELETE ON test_snippetbox.* TO 'test_web'@'172.17.0.1';
+
+ALTER USER 'test_web'@'172.17.0.1' IDENTIFIED BY 'pass';
+```
+
+### 2. Run all tests
 ```bash
 go test -v ./...
 ```
 
-### 2. Run a specific test
+### 3. Run a specific test
 ```bash
 go test -v -run="^TestUserSignup$" ./cmd/web/
 ```
