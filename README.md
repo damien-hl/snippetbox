@@ -13,7 +13,7 @@ docker run -d --name snippetbox-mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=passwo
 
 ### 2. Connect to the MySQL container
 ```bash
-docker exec -it snippetbox-mysql bash
+docker exec -it snippetbox-mysql /bin/bash
 ```
 
 ### 3. Connect to the MySQL server
@@ -82,7 +82,6 @@ INSERT INTO snippets (title, content, created, expires) VALUES (
 
 ### 6. Create a new user
 Replace localhost with the IP address of the Docker container (172.17.0.1 in my case)
-
 ```sql
 CREATE USER 'web'@'172.17.0.1';
 
@@ -94,9 +93,13 @@ FLUSH PRIVILEGES;
 ```
 
 ### 7. Generate a self-signed certificate
-
+Go installation directory may vary depending on your OS
 ```bash
 go run /usr/local/go/src/crypto/tls/generate_cert.go --rsa-bits=2048 --host=localhost
+
+mkdir tls
+mv cert.pem tls/cert.pem
+mv key.pem tls/key.pem
 ```
 
 ## Run tests
